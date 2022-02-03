@@ -53,22 +53,25 @@ def enforce_position_limit(D, pop_size, pos, x_min, x_max, vel, v_min, v_max):
 
     for i in range(pop_size):
         for j in range(D):
-            if new_position[i][j] < x_min[j]:
-                new_position[i][j] = x_min[j]
+
+            # print('newPos: {} || xMin: {}'.format(new_position[i][j], x_min[0][j]))
+
+            if new_position[i][j] < x_min[0][j]:
+                new_position[i][j] = x_min[0][j]
                 if new_velocity[i][j] < 0:
                     new_velocity[i][j] = - new_velocity[i][j]
             
-            elif new_position[i][j] > x_max[j]:
-                new_position[i][j] = x_max[j]
+            elif new_position[i][j] > x_max[0][j]:
+                new_position[i][j] = x_max[0][j]
                 if new_velocity[i][j] > 0:
                     new_velocity[i][j] = - new_velocity[i][j]
 
             # check velocity in case of asymmetric velocity limits
-            if new_velocity[i][j] < v_min[j]:
-                new_velocity[i][j] = v_min[j]
+            if new_velocity[i][j] < v_min[0][j]:
+                new_velocity[i][j] = v_min[0][j]
             
-            elif new_velocity[i][j] > v_max[j]:
-                new_velocity[i][j] = v_max[j]
+            elif new_velocity[i][j] > v_max[0][j]:
+                new_velocity[i][j] = v_max[0][j]
 
     return new_position, new_velocity
 
@@ -108,6 +111,9 @@ def fitness_function(popSize, pos, X, Y):
         Naps = int(pos[i,0])
         Pt=20
 
+        if(Naps == 0):
+            Naps = 1
+
         for j in range(Naps):
     
             PosicaoAps = int(pos[i,j+1])
@@ -144,9 +150,8 @@ def fitness_function(popSize, pos, X, Y):
                 hm = hr
                 if distancia[k] > 0:
                     pr = Pt - (UFPA(x, ht[p], hr, f, (distancia[k] * 1000)))
+                    # print('value pr = {} || value limiar = {}'.format(pr, input_user_limiar))
                     if pr >= input_user_limiar:
-                        # pr2[k] = pr 
-                        # did[k] = distancia[k]
                         pr2.append(pr)
                         did.append(distancia[k])
                         intercobertura[k,2] = 1    
@@ -165,7 +170,7 @@ def fitness_function(popSize, pos, X, Y):
         
         # %normalizando
         obj2 = Naps
-        obj2 = obj2 / ff_par.x_max[0]
+        obj2 = obj2 / ff_par.x_max[0][0]
         fit[i] = W * obj1 + (1-W) * obj2
         
         vetor_obj_1.append(obj1)
@@ -220,7 +225,7 @@ max_gen_wo_change_best, print_convergence_results, print_convergence_chart):
     gbestval, gbestid = minimum_fitness(fit)
     gbest = pos[gbestid][:]
     memGbestval = np.zeros([1,max_gen+1])
-    memGbestval[1] = gbestval
+    memGbestval[0][0] = gbestval
 
     # figure(2)
     # plot(vetorobj2(gbestid)*ff_par.Xmax(1),vetorobj1(gbestid)*100,'ob')
@@ -322,8 +327,12 @@ max_gen_wo_change_best, print_convergence_results, print_convergence_chart):
             
             
         # % EVALUATE the COPIED population
+        ff_par.fit_eval = 0
+        ff_par.best_fit_eval = 0
         copyFit = fitness_function(pop_size, copyPos, X, Y)
         # % EVALUATE the CURRENT population
+        ff_par.fit_eval = 0
+        ff_par.best_fit_eval = 0
         fit = fitness_function(pop_size, pos, X, Y)
 
         # % CREATE NEW population to replace CURRENT population
@@ -357,7 +366,7 @@ max_gen_wo_change_best, print_convergence_results, print_convergence_chart):
         # xlim = [1 10]    
         # % SAVE fitness
         
-        memGbestval[countGen+1] = gbestval
+        memGbestval[0][countGen] = gbestval
 
         # print results
         if math.remainder(countGen, print_convergence_results) == 0 or countGen == 1:
@@ -378,16 +387,14 @@ max_gen_wo_change_best, print_convergence_results, print_convergence_chart):
     #     ylabel('fitness');
     #     grid on;
 
-    return True
-
-    # gBestFit, gBest
+    return gbestval, gbest
 
 
 
 # -----------------------
 # RUNNING
 
-PATH_FILE = os.getcwd() + '/route-file-33p.txt'
+PATH_FILE = os.getcwd() + '/route-file.txt'
 
 # obj_epso = recordclass("objeto", "max_gen max_fit_eval max_gen_wo_change_best print_convergence_results \
 # print_convergence_chart pop_size mutation_rate communication_probability")
@@ -410,7 +417,7 @@ número máximo de execuções, flag para impressão da convergência de resulta
 memória para o melhor aptidão de cada execução, memória para melhor aptidão de cada execução
 """
 pop_size, mutation_rate, communication_probability = 10, 0.4, 0.7
-max_fit_eval, max_gen, max_gen_wo_change_best = 10, 5, 5
+max_fit_eval, max_gen, max_gen_wo_change_best = 20, 5, 5
 max_run, print_convergency_chart, print_convergency_results = 3, 1, 1
 mem_best_fitness, mem_best_solutions = np.zeros([1, max_run]), np.zeros([max_run, ff_par.D])
 
@@ -467,7 +474,8 @@ for i in range(max_run):
 
     #no arquivo original -> [vetorw' vetorbest] 
     # vetorw' -> é a transposta do complexo conjugado => https://www.mathworks.com/help/matlab/ref/ctranspose.html
-    vetor_max_run = [np.conj(vetor_w.T), vetor_best]
+    vetor_w = np.reshape(vetor_w, [1,len(vetor_w)])
+    vetor_max_run = np.concatenate([np.conj(vetor_w.T), vetor_best], axis=1)
 
 
     for jh in range(len(vetor_max_run)): # --- 1 #linha
