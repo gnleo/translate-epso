@@ -464,7 +464,7 @@ for i in range(max_run):
         g_best_fit, g_best = EPSO(pop_size, mutation_rate, communication_probability, max_gen, max_fit_eval, 
         max_gen_wo_change_best, print_convergency_results, print_convergency_chart)
 
-        mem_best_fitness[i] = g_best_fit
+        mem_best_fitness[0][i] = g_best_fit
         mem_best_solutions[i,:] = g_best
 
         # vetor_w[ii] = W
@@ -477,53 +477,63 @@ for i in range(max_run):
     vetor_w = np.reshape(vetor_w, [1,len(vetor_w)])
     vetor_max_run = np.concatenate([np.conj(vetor_w.T), vetor_best], axis=1)
 
+    for jh in range(len(vetor_max_run[:,0])): # --- 1 #linha
+        for jl in range(len(vetor_max_run[0,:])): # --- 2 #coluna
 
-    for jh in range(len(vetor_max_run)): # --- 1 #linha
-        for jl in range(len(vetor_max_run)): # --- 2 #coluna
-
-            hjk = vetor_max_run(jh, 2)
+            hjk = vetor_max_run[jh, 2]
 
             # não existe switch no python, tratamento com if
-            if vetor_max_run(jh,1) == vetor_w(1):
-                hjk = vetor_max_run(jh,2)
+            if vetor_max_run[jh,1] == vetor_w[0][0]:
+                hjk = vetor_max_run[jh,2]
                 if jl >= 1 and jl <= hjk+2:
-                    vetor_max_run_consolidado_w1[jhh+g, jl] = vetor_max_run(jh,jl)
+                    # vetor_max_run_consolidado_w1[jhh+g, jl] = vetor_max_run[jh,jl]
+                    vetor_max_run_consolidado_w1.append(vetor_max_run[jh,jl])
+
+            if vetor_max_run[jh,1] == vetor_w[0][1]:
+                if jl >= 1 and jl <= hjk+2:
+                    # vetor_max_run_consolidado_w2[jhh+g, jl] = vetor_max_run[jh,jl]
+                    vetor_max_run_consolidado_w2.append(vetor_max_run[jh,jl])
             
-            if vetor_max_run(jh,1) == vetor_w(2):
+            if vetor_max_run[jh,1] == vetor_w[0][2]:
                 if jl >= 1 and jl <= hjk+2:
-                    vetor_max_run_consolidado_w2[jhh+g, jl] = vetor_max_run(jh,jl)
+                    # vetor_max_run_consolidado_w3[jhh+g, jl] = vetor_max_run[jh,jl]
+                    vetor_max_run_consolidado_w3.append(vetor_max_run[jh,jl])
             
-            if vetor_max_run(jh,1) == vetor_w(3):
+            if vetor_max_run[jh,1] == vetor_w[0][3]:
                 if jl >= 1 and jl <= hjk+2:
-                    vetor_max_run_consolidado_w3[jhh+g, jl] = vetor_max_run(jh,jl)
+                    # vetor_max_run_consolidado_w4[jhh+g, jl] = vetor_max_run[jh,jl]
+                    vetor_max_run_consolidado_w4.append(vetor_max_run[jh,jl])
             
-            if vetor_max_run(jh,1) == vetor_w(4):
+            if vetor_max_run[jh,1] == vetor_w[0][4]:
                 if jl >= 1 and jl <= hjk+2:
-                    vetor_max_run_consolidado_w4[jhh+g, jl] = vetor_max_run(jh,jl)
+                    # vetor_max_run_consolidado_w5[jhh+g, jl] = vetor_max_run[jh,jl]
+                    vetor_max_run_consolidado_w5.append(vetor_max_run[jh,jl])
             
-            if vetor_max_run(jh,1) == vetor_w(5):
+            if vetor_max_run[jh,1] == vetor_w[0][5]:
                 if jl >= 1 and jl <= hjk+2:
-                    vetor_max_run_consolidado_w5[jhh+g, jl] = vetor_max_run(jh,jl)
+                    # vetor_max_run_consolidado_w6[jhh+g, jl] = vetor_max_run[jh,jl]
+                    vetor_max_run_consolidado_w6.append(vetor_max_run[jh,jl])
+
+            if vetor_max_run[jh,1] == vetor_w[0][6]:
+                if jl >= 1 and jl <= hjk+2:
+                    # vetor_max_run_consolidado_w7[jhh+g, jl] = vetor_max_run[jh,jl]
+                    vetor_max_run_consolidado_w7.append(vetor_max_run[jh,jl])
             
-            if vetor_max_run(jh,1) == vetor_w(6):
+            if vetor_max_run[jh,1] == vetor_w[0][7]:
                 if jl >= 1 and jl <= hjk+2:
-                    vetor_max_run_consolidado_w6[jhh+g, jl] = vetor_max_run(jh,jl)
+                    # vetor_max_run_consolidado_w8[jhh+g, jl] = vetor_max_run[jh,jl]
+                    vetor_max_run_consolidado_w8.append(vetor_max_run[jh,jl])
             
-            if vetor_max_run(jh,1) == vetor_w(7):
+            if vetor_max_run[jh,1] == vetor_w[0][8]:
                 if jl >= 1 and jl <= hjk+2:
-                    vetor_max_run_consolidado_w7[jhh+g, jl] = vetor_max_run(jh,jl)
+                    # vetor_max_run_consolidado_w9[jhh+g, jl] = vetor_max_run[jh,jl]
+                    vetor_max_run_consolidado_w9.append(vetor_max_run[jh,jl])
             
-            if vetor_max_run(jh,1) == vetor_w(8):
+            if vetor_max_run[jh,1] == vetor_w[0][9]:
                 if jl >= 1 and jl <= hjk+2:
-                    vetor_max_run_consolidado_w8[jhh+g, jl] = vetor_max_run(jh,jl)
-            
-            if vetor_max_run(jh,1) == vetor_w(9):
-                if jl >= 1 and jl <= hjk+2:
-                    vetor_max_run_consolidado_w9[jhh+g, jl] = vetor_max_run(jh,jl)
-            
-            if vetor_max_run(jh,1) == vetor_w(10):
-                if jl >= 1 and jl <= hjk+2:
-                    vetor_max_run_consolidado_w10[jhh+g, jl] = vetor_max_run(jh,jl)
+                    # vetor_max_run_consolidado_w10[jhh+g, jl] = vetor_max_run[jh,jl]
+                    vetor_max_run_consolidado_w10.append(vetor_max_run[jh,jl])
+                    
             # não existe switch no python, tratamento com if
         jhh=jhh+1
     
@@ -552,13 +562,13 @@ for i in range(max_run):
         # grid on;
     
     else:
-        print('Averange best fitness: {}'.format(np.mean(mem_best_fitness)))
-        print('Standart deviation best fitness: {}'.format(np.std(mem_best_fitness)))
+        print('\nAverange best fitness: {}'.format(np.mean(mem_best_fitness)))
+        print('\nStandart deviation best fitness: {}'.format(np.std(mem_best_fitness)))
 
     # end print results final
 
     for io in range(len(vetor_w)):
-        print('Vetor_W: {} Vetorbest: {}'.format(vetor_w[io], vetor_best[io,:]))
+        print('Vetor_W: {} \nVetorbest: {}\n\n'.format(vetor_w[io], vetor_best[io,:]))
 
     # figure;
     # plot(1:i,vetormaxrunconsolidadow1(:,3:size(vetormaxrunconsolidadow1,2)),'or')
